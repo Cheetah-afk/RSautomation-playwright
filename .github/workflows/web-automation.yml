@@ -17,6 +17,17 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure full repository history
+
+      - name: Verify Repository Files
+        run: Get-ChildItem -Recurse
+
+      - name: Check if package.json exists
+        run: |
+          if (!(Test-Path "package.json")) {
+            echo "Error: package.json not found!"; exit 1;
+          }
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -24,7 +35,7 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install  # Faster than npm install
+        run: npm ci  # Ensures a clean install
 
       - name: Install Playwright Browsers
         run: npx playwright install
